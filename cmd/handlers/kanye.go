@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/cobbinma/kanye-west-api/models"
 	"io/ioutil"
 	"net/http"
@@ -26,9 +27,12 @@ func Kanye(client Client) func(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		fmt.Println(string(body))
+
 		var quote models.Quote
 		err = json.Unmarshal(body, &quote)
 		if err != nil {
+			fmt.Println(err)
 			_, _ = w.Write([]byte("could not marshall kanye"))
 			return
 		}

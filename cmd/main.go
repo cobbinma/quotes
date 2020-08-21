@@ -10,7 +10,8 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/kanye", handlers.Kanye)
+	client := http.DefaultClient
+	r.HandleFunc("/kanye", handlers.Kanye(client))
 	log.Println("serving quotes...")
 	log.Fatal(http.ListenAndServe(":2024", r))
 }

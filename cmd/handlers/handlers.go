@@ -1,30 +1,30 @@
 package handlers
 
-import (
-	"net/http"
-	"sync"
-)
+import "net/http"
 
 type handlers struct {
-	client      Client
-	initialised sync.Once
+	client Client
 }
 
-func NewHandlers() *handlers {
-	return &handlers{}
+type handlerOptions struct {
+	client Client
 }
 
-func (h *handlers) SetClient(client Client) {
-	h.client = client
+func WithCustomClient(client Client) func(*handlerOptions) *handlerOptions {
+	return func(ho *handlerOptions) *handlerOptions {
+		ho.client = client
+		return ho
+	}
 }
 
-func (h *handlers) getClient() Client {
-	h.initialised.Do(h.init)
-	return h.client
-}
-
-func (h *handlers) init() {
-	if h.client == nil {
-		h.client = http.DefaultClient
+func NewHandlers(options ...func(*handlerOptions) *handlerOptions) *handlers {
+	opts := &handlerOptions{
+		client: http.DefaultClient,
+	}
+	for i := range options {
+		opts = options[i](opts)
+	}
+	return &handlers{
+		client: opts.client,
 	}
 }

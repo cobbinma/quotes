@@ -8,7 +8,7 @@ import (
 )
 
 func (h *handlers) Kanye(w http.ResponseWriter, r *http.Request) {
-	resp, err := h.getClient().Get("https://api.kanye.rest/")
+	resp, err := h.client.Get("https://api.kanye.rest/")
 	if err != nil {
 		_, _ = w.Write([]byte("error getting kanye quote"))
 		return
